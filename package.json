@@ -1,0 +1,29 @@
+{
+  "name": "travelair",
+  "version": "1.0.0",
+  "description": "Final exam project for flight bookings",
+  "main": "app.js",
+  "scripts": {
+    "test": "test",
+    "run": "nodemon app.js",
+    "setDB": "node ./config/createDatabase.js"
+  },
+  "keywords": [
+    "flights",
+    "exam"
+  ],
+  "author": "Georgi Dimitrov",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "express-rate-limit": "^6.4.0",
+    "express-session": "^1.17.3",
+    "express-validator": "^6.14.0",
+    "helmet": "^5.0.2",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.19.0",
+    "session": "^0.1.0",
+    "sqlite3": "^5.0.8"
+  }
+}
