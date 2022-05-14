@@ -1,5 +1,4 @@
-const { Sequelize, Op, Model, DataTypes, NOW } = require("sequelize");
-const { sequelize } = require("../../../config/database.js");
+const { Op } = require("sequelize");
 const { Flight } = require("./flight.js");
 
 async function createFlight(flight) {

@@ -1,20 +1,30 @@
 const flightRepo = require("./flightRepo.js");
+const {
+  validateString,
+  validateFrequency,
+  validateDate,
+} = require("../../../config/validation.js");
 
 async function scheduleFlight(req, res, next) {
-  const firstFlight = new Date(req.body.startingFrom);
-
-  let newFlight = {
-    origin: req.body.flight.origin,
-    destination: req.body.flight.destination,
-    takeOff: firstFlight,
-    duration: req.body.flight.duration,
-    rows: req.body.flight.rows ? req.body.flight.rows : null,
-    seats: req.body.flight.seats ? req.body.flight.seats : null,
-  };
-
-  let landingTime = new Date(firstFlight);
-  landingTime.setMinutes(firstFlight.getMinutes() + newFlight.duration);
   try {
+    validateString(req.body.flight.origin);
+    validateString(req.body.flight.destination);
+    validateFrequency(req.body.frequency);
+    const firstFlight = new Date(req.body.startingFrom);
+
+    let newFlight = {
+      origin: req.body.flight.origin,
+      destination: req.body.flight.destination,
+      takeOff: firstFlight,
+      duration: req.body.flight.duration,
+      rows: req.body.flight.rows ? req.body.flight.rows : null,
+      seats: req.body.flight.seats ? req.body.flight.seats : null,
+    };
+
+    validateDate(firstFlight);
+
+    let landingTime = new Date(firstFlight);
+    landingTime.setMinutes(firstFlight.getMinutes() + newFlight.duration);
     switch (req.body.frequency) {
       case "Ones":
         newFlight.landing = landingTime;
@@ -44,19 +54,28 @@ async function scheduleFlight(req, res, next) {
 }
 
 async function getBy(req, res, next) {
-  const origin = req.body.origin;
-  const destination = req.body.destination;
-  const startDate = req.body.startDate;
-  const finishDate = req.body.finishDate;
+  try {
+    const origin = req.body.origin;
+    const destination = req.body.destination;
+    const startDate = req.body.startDate;
+    const finishDate = req.body.finishDate;
 
-  const flights = await flightRepo.fetchBy(
-    origin,
-    destination,
-    startDate,
-    finishDate
-  );
+    validateString(origin);
+    validateString(destination);
+    validateDate(startDate);
+    validateDate(finishDate);
 
-  res.send(flights);
+    const flights = await flightRepo.fetchBy(
+      origin,
+      destination,
+      startDate,
+      finishDate
+    );
+
+    res.send(flights);
+  } catch (error) {
+    next(error);
+  }
 }
 
 exports.scheduleFlight = scheduleFlight;
