@@ -11,6 +11,6 @@ ticketRouter.post(
   ticketController.createTicket
 );
 
-ticketRouter.get("/", ticketController.getByUser);
+ticketRouter.get("/user/:id", ticketController.getByUser);
 
 exports.ticketRouter = ticketRouter;

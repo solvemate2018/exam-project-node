@@ -30,4 +30,12 @@ const User = sequelize.define(
   {}
 );
 
+async function setAssociations() {
+  const { Ticket } = require("../ticket/ticket.js");
+  User.hasMany(Ticket);
+  Ticket.belongsTo(User);
+}
+
+setTimeout(setAssociations, 200);
+
 exports.User = User;

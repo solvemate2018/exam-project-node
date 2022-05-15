@@ -9,24 +9,29 @@ sequelize.models.Passager = Passager;
 sequelize.models.User = User;
 sequelize.models.Ticket = Ticket;
 
-Passager.hasOne(Ticket, {
-  onDelete: "CASCADE",
-});
-Ticket.belongsTo(Passager, {
-  onDelete: "CASCADE",
-});
-
-User.hasMany(Ticket);
-Ticket.belongsTo(User);
-
-Flight.hasMany(Ticket);
-Ticket.belongsTo(Flight);
-
 async function syncronize() {
-  await User.sync({ force: true });
-  await Passager.sync({ force: true });
-  await Flight.sync({ force: true });
-  await Ticket.sync({ force: true });
+  await Ticket.sync();
+  await User.sync();
+  await Passager.sync();
+  await Flight.sync();
+
+  Passager.hasOne(Ticket, {
+    onDelete: "CASCADE",
+  });
+  Ticket.belongsTo(Passager, {
+    onDelete: "CASCADE",
+  });
+
+  User.hasMany(Ticket);
+  Ticket.belongsTo(User);
+
+  Flight.hasMany(Ticket);
+  Ticket.belongsTo(Flight);
+
+  await Ticket.sync({ alter: true });
+  await User.sync({ alter: true });
+  await Passager.sync({ alter: true });
+  await Flight.sync({ alter: true });
 }
 
-setTimeout(syncronize, 2000);
+setTimeout(syncronize, 100);

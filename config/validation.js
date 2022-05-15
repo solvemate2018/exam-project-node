@@ -1,38 +1,22 @@
 const Joi = require("joi");
 
 async function validateString(stringToCheck) {
-  try {
-    Joi.assert(stringToCheck, Joi.string().min(3).max(30));
-  } catch (error) {
-    throw error;
-  }
+  Joi.assert(stringToCheck, Joi.string().min(3).max(30));
 }
 async function validateDate(dateToCheck) {
-  try {
-    Joi.assert(
-      dateToCheck,
-      Joi.date().min("now").max(new Date("2030", "12", "31"))
-    );
-  } catch (error) {
-    throw error;
-  }
+  Joi.assert(
+    dateToCheck,
+    Joi.date().min("now").max(new Date("2030", "12", "31"))
+  );
 }
 async function validateFrequency(frequencyToCheck) {
-  try {
-    Joi.assert(
-      frequencyToCheck,
-      Joi.string().valid("Ones", "Ones per week", "Ones per day")
-    );
-  } catch (error) {
-    throw error;
-  }
+  Joi.assert(
+    frequencyToCheck,
+    Joi.string().valid("Ones", "Ones per week", "Ones per day")
+  );
 }
 async function validateEmail(emailToCheck) {
-  try {
-    Joi.assert(emailToCheck, Joi.string().email());
-  } catch (error) {
-    throw error;
-  }
+  Joi.assert(emailToCheck, Joi.string().email());
 }
 
 exports.validateString = validateString;

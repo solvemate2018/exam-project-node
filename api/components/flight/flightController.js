@@ -7,9 +7,9 @@ const {
 
 async function scheduleFlight(req, res, next) {
   try {
-    validateString(req.body.flight.origin);
-    validateString(req.body.flight.destination);
-    validateFrequency(req.body.frequency);
+    await validateString(req.body.flight.origin);
+    await validateString(req.body.flight.destination);
+    await validateFrequency(req.body.frequency);
     const firstFlight = new Date(req.body.startingFrom);
 
     let newFlight = {
@@ -20,8 +20,7 @@ async function scheduleFlight(req, res, next) {
       rows: req.body.flight.rows ? req.body.flight.rows : null,
       seats: req.body.flight.seats ? req.body.flight.seats : null,
     };
-
-    validateDate(firstFlight);
+    await validateDate(firstFlight);
 
     let landingTime = new Date(firstFlight);
     landingTime.setMinutes(firstFlight.getMinutes() + newFlight.duration);
@@ -60,10 +59,10 @@ async function getBy(req, res, next) {
     const startDate = req.body.startDate;
     const finishDate = req.body.finishDate;
 
-    validateString(origin);
-    validateString(destination);
-    validateDate(startDate);
-    validateDate(finishDate);
+    await validateString(origin);
+    await validateString(destination);
+    await validateDate(startDate);
+    await validateDate(finishDate);
 
     const flights = await flightRepo.fetchBy(
       origin,

@@ -27,5 +27,20 @@ async function fetchBy(origin, destination, startDate, finishDate) {
   });
 }
 
+async function flightHasSeat(ticket_row, ticket_seat, flightId) {
+  const flight = await Flight.findByPk(flightId);
+  if (flight == null) throw new Error("There is no such flight");
+  if (
+    flight.rows < ticket_row ||
+    ticket_row <= 0 ||
+    flight.seats < ticket_seat ||
+    ticket_seat <= 0
+  ) {
+    return false;
+  }
+  return true;
+}
+
 exports.createFlight = createFlight;
 exports.fetchBy = fetchBy;
+exports.flightHasSeat = flightHasSeat;

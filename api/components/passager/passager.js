@@ -1,4 +1,4 @@
-const { Sequelize, Op, Model, DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const { sequelize } = require("../../../config/database.js");
 
 const Passager = sequelize.define(
@@ -29,5 +29,13 @@ const Passager = sequelize.define(
   },
   {}
 );
+
+async function setAssociations() {
+  const { Ticket } = require("../ticket/ticket.js");
+  Ticket.hasOne(Passager);
+  Passager.belongsTo(Ticket);
+}
+
+setTimeout(setAssociations, 200);
 
 exports.Passager = Passager;

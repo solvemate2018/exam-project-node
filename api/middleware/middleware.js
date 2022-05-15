@@ -2,7 +2,7 @@ const express = require("express");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const routes = require("../routes.js");
-//const errorHandler = require("../errorHandling/errorHandler.js");
+const errorHandler = require("../errorHandling/errorHandler.js");
 const cors = require("cors");
 
 async function setMiddleware(app) {
@@ -34,7 +34,7 @@ async function setMiddleware(app) {
   app.use(routes.router);
   console.log("All routes have been added to server!");
 
-  //   app.use(errorHandler.defaultHandling);
+  app.use(errorHandler.defaultHandling);
 }
 
 exports.setMiddleware = setMiddleware;
