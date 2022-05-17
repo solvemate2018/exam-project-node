@@ -14,7 +14,7 @@ async function isAvailable(ticket_row, ticket_seat, flightId) {
   }
 }
 
-async function bookTicket(ticket, passager, flightId) {
+async function bookTicket(ticket, passager, flightId, userId) {
   const dbpassager = await Passager.create({
     firstName: passager.firstName,
     lastName: passager.lastName,
@@ -25,7 +25,7 @@ async function bookTicket(ticket, passager, flightId) {
   const dbticket = await Ticket.create({
     ticket_row: ticket.ticket_row,
     ticket_seat: ticket.ticket_seat,
-    UserId: ticket.UserId,
+    UserId: userId,
     FlightId: flightId,
     PassagerId: dbpassager.id,
   });

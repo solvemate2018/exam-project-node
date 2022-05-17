@@ -1,16 +1,20 @@
 const express = require("express");
-// import authorization from "../../security/authorization.js";
+const authorization = require("../../security/authorization.js");
 const ticketController = require("./ticketController.js");
 const ticketRouter = express.Router();
 
 ticketRouter.use(express.json());
 
 ticketRouter.post(
-  "/:flightId",
-  //   authorization.authorize(["Admin", "Moderator"]),
+  "/flight/:flightId/user/:userId",
+  authorization.authorize(["GUEST"], true),
   ticketController.createTicket
 );
 
-ticketRouter.get("/user/:id", ticketController.getByUser);
+ticketRouter.get(
+  "/user/:userId",
+  authorization.authorize(["GUEST"], true),
+  ticketController.getByUser
+);
 
 exports.ticketRouter = ticketRouter;

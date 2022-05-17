@@ -19,7 +19,12 @@ async function validateEmail(emailToCheck) {
   Joi.assert(emailToCheck, Joi.string().email());
 }
 
+async function validatePassword(password) {
+  //To be completed
+}
+
 exports.validateString = validateString;
 exports.validateDate = validateDate;
 exports.validateFrequency = validateFrequency;
 exports.validateEmail = validateEmail;
+exports.validatePassword = validatePassword;
