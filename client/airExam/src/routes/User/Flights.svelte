@@ -1,14 +1,11 @@
 <script>
     import { onMount } from "svelte";
     import { inboundFlight, outboundFlight } from "../../stores/flight";
-    import { Link, useNavigate } from "svelte-navigator";
-    import {
-        fetchFlights,
-        pastDate,
-        futureDate,
-    } from "../../miscellaneous/functions.js";
+    import { useNavigate } from "svelte-navigator";
+    import { pastDate, futureDate } from "../../functions/functions.js";
+    import { fetchFlights } from "../../functions/apiCalls.js";
     import Flight from "../../components/Flight.svelte";
-    import { passagers } from "../../stores/passagers";
+    import { passengers } from "../../stores/passengers";
 
     let routes = [];
     let origin = "";
@@ -47,7 +44,7 @@
         destination = "";
         inboundFlight.set({});
         outboundFlight.set({});
-        passagers.set([]);
+        passengers.set([]);
     });
 
     async function searchInboundFlights() {
@@ -212,10 +209,10 @@
                 />
                 <br />
                 <button
-                    on:click={() => navigate("/addPassagers")}
+                    on:click={() => navigate("/addPassengers")}
                     type="button button-link"
                     class="button"
-                    ><p class="button-text">Add Passagers</p></button
+                    ><p class="button-text">Add Passengers</p></button
                 >
                 <p />
             {:else if searchedOutboundFlights == false}
@@ -279,7 +276,7 @@
     }
     .button {
         width: 6vw;
-        height: 4vh;
+        height: 5vh;
         background-color: #748da6;
         border-radius: 6px;
         border: 0px;

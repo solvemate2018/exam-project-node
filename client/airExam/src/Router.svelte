@@ -7,7 +7,7 @@
   import About from "./routes/User/About.svelte";
   import Login from "./routes/Login.svelte";
   import Register from "./routes/Register.svelte";
-  import AddPassagers from "./routes/User/AddPassagers.svelte";
+  import AddPassengers from "./routes/User/AddPassengers.svelte";
   import ConfirmReservation from "./routes/User/ConfirmReservation.svelte";
   import MyFlights from "./routes/User/MyFlights.svelte";
   import CreateFlight from "./routes/Admin/CreateFlight.svelte";
@@ -24,7 +24,7 @@
       <div id="content">
         <Route path="/"><Flights /></Route>
         <Route path="/about"><About /></Route>
-        <Route path="/addPassagers"><AddPassagers /></Route>
+        <Route path="/addPassengers"><AddPassengers /></Route>
         <Route path="/bookTickets"><BookTickets /></Route>
         <Route path="/confirmReservation"><ConfirmReservation /></Route>
         <Route path="/login"><Login /></Route>

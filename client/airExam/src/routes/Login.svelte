@@ -1,13 +1,9 @@
 <script>
-    import {
-        verifyEmail,
-        verifyPassword,
-        login,
-    } from "../miscellaneous/functions";
-    import { user } from "../stores/user";
+    import { verifyEmail, verifyPassword } from "../functions/functions";
+    import { login } from "../functions/apiCalls";
     import { useNavigate } from "svelte-navigator";
     import { inboundFlight, outboundFlight } from "../stores/flight";
-    import { passagers } from "../stores/passagers";
+    import { passengers } from "../stores/passengers";
     import { Link } from "svelte-navigator";
     let email;
     let password;
@@ -16,22 +12,26 @@
     const navigate = useNavigate();
 
     async function tryLogin() {
+        emailError = " ";
+        passwordError = " ";
         if (verifyEmail(email) && verifyPassword(password) == "Correct") {
             let loginMsg = await login(email, password);
             if (
                 loginMsg == "Successful" &&
                 $inboundFlight != {} &&
                 $outboundFlight != {} &&
-                $passagers[0] != undefined &&
-                $passagers[0].hasOwnProperty("outboundSeat")
+                $passengers[0] != undefined &&
+                $passengers[0].hasOwnProperty("outboundSeat")
             ) {
                 navigate("/confirmReservation");
             } else if (loginMsg == "Successful") {
                 navigate("/");
             }
-        } else if (!verifyEmail(email)) {
+        }
+        if (!verifyEmail(email)) {
             emailError = "This is not a valid email!";
-        } else if (verifyPassword(password) != "Correct") {
+        }
+        if (verifyPassword(password) != "Correct") {
             passwordError = verifyPassword(password);
         }
     }

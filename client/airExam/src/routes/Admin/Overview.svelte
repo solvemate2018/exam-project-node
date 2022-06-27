@@ -1,7 +1,13 @@
 <script>
     import { onMount } from "svelte";
     import Flight from "../../components/Flight.svelte";
-
+    import {
+        sumBookings,
+        sumPlannedFlights,
+        sumPassedFlights,
+        getNextFlights,
+        getLastFlights,
+    } from "../../functions/apiCalls";
     let lastFlights = [];
     let nextFlights = [];
 
@@ -22,81 +28,6 @@
 
         bookedTickets = await sumBookings();
     });
-
-    async function getLastFlights() {
-        let response = await fetch("http://localhost:8000/flight/past", {
-            method: "GET",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": true,
-            },
-        });
-        let result = await response.json();
-        return result.flights;
-    }
-
-    async function getNextFlights() {
-        let response = await fetch("http://localhost:8000/flight/future", {
-            method: "GET",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": true,
-            },
-        });
-        let result = await response.json();
-        return result.flights;
-    }
-
-    async function sumPassedFlights() {
-        let response = await fetch("http://localhost:8000/flight/countPast", {
-            method: "GET",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": true,
-            },
-        });
-        let count = await response.json();
-        return count.count;
-    }
-
-    async function sumPlannedFlights() {
-        let response = await fetch("http://localhost:8000/flight/countFuture", {
-            method: "GET",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": true,
-            },
-        });
-        let count = await response.json();
-        return count.count;
-    }
-
-    async function sumBookings() {
-        let response = await fetch("http://localhost:8000/ticket/count", {
-            method: "GET",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Credentials": true,
-            },
-        });
-        let count = await response.json();
-        return count.count;
-    }
 </script>
 
 <div class="container">
@@ -127,7 +58,7 @@
     </div>
     <div>
         <p>
-            {"Last updated at:" + lastUpdated}
+            {"Last updated at: " + lastUpdated}
         </p>
     </div>
 </div>

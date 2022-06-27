@@ -1,18 +1,18 @@
 <script>
     import { useNavigate } from "svelte-navigator";
     import { inboundFlight, outboundFlight } from "../../stores/flight";
-    import { passagers } from "../../stores/passagers";
-    import { bookFlightTickets } from "../../miscellaneous/functions";
+    import { passengers } from "../../stores/passengers";
+    import { bookFlightTickets } from "../../functions/apiCalls.js";
     import RouteInfo from "../../components/RouteInfo.svelte";
     const navigate = useNavigate();
 
     async function bookTickets() {
         let somethingWrong = false;
-        $passagers.forEach(async (passager) => {
+        $passengers.forEach(async (passenger) => {
             if (
                 (await bookFlightTickets(
-                    passager,
-                    passager.inboundSeat,
+                    passenger,
+                    passenger.inboundSeat,
                     $inboundFlight.id
                 )) != "Succesfully created"
             ) {
@@ -20,8 +20,8 @@
             }
             if (
                 (await bookFlightTickets(
-                    passager,
-                    passager.outboundSeat,
+                    passenger,
+                    passenger.outboundSeat,
                     $outboundFlight.id
                 )) != "Succesfully created"
             ) {
@@ -42,27 +42,27 @@
 <div class="container">
     <RouteInfo />
     <h3>Inbound Flight</h3>
-    {#each $passagers as passager}
+    {#each $passengers as passenger}
         <h4>
-            {passager.firstName +
+            {passenger.firstName +
                 " " +
-                passager.lastName +
+                passenger.lastName +
                 " Row: " +
-                passager.inboundSeat.row +
+                passenger.inboundSeat.row +
                 " Seat: " +
-                passager.inboundSeat.seat}
+                passenger.inboundSeat.seat}
         </h4>
     {/each}
     <h3>Outbound Flight</h3>
-    {#each $passagers as passager}
+    {#each $passengers as passenger}
         <h4>
-            {passager.firstName +
+            {passenger.firstName +
                 " " +
-                passager.lastName +
+                passenger.lastName +
                 " Row: " +
-                passager.outboundSeat.row +
+                passenger.outboundSeat.row +
                 " Seat: " +
-                passager.outboundSeat.seat}
+                passenger.outboundSeat.seat}
         </h4>
     {/each}
     <button on:click={bookTickets} type="button" class="button"
@@ -73,7 +73,7 @@
 <style>
     .button {
         width: 10vw;
-        height: 4vh;
+        height: 5vh;
         background-color: #748da6;
         border-radius: 6px;
         border: 0px;

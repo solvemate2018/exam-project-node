@@ -1,6 +1,6 @@
 <script>
     import { inboundFlight, outboundFlight } from "../stores/flight";
-    import { getDayOfTheWeek, getMonth } from "../miscellaneous/functions.js";
+    import { getDayOfTheWeek, getMonth } from "../functions/functions.js";
     export let flight;
     export let selected = false;
     export let inbound = true;

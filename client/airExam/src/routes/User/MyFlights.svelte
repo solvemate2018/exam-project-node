@@ -1,12 +1,11 @@
 <script>
     import { onMount } from "svelte";
+    import { getDayOfTheWeek, getMonth } from "../../functions/functions";
     import {
         fetchTicketsForUser,
         fetchFlightById,
-        fetchPassagerById,
-        getDayOfTheWeek,
-        getMonth,
-    } from "../../miscellaneous/functions";
+        fetchPassengerById,
+    } from "../../functions/apiCalls";
     let flights = [];
     let tickets = [];
     let dataPrepared = false;
@@ -16,7 +15,7 @@
 
         tickets = await Promise.all(
             tickets.map(async (ticket) => {
-                ticket.passager = await fetchPassagerById(ticket.PassagerId);
+                ticket.passenger = await fetchPassengerById(ticket.PassengerId);
                 return ticket;
             })
         );
@@ -77,18 +76,18 @@
                             " "}<i class="fa-solid fa-plane-arrival" />
                     </p>
                 </div>
-                <div class="passagers">
+                <div class="passengers">
                     {#each flight.tickets as ticket}
-                        <div class="passager">
+                        <div class="passenger">
                             <p class="flight-course">
-                                {ticket.passager.firstName +
+                                {ticket.passenger.firstName +
                                     " " +
-                                    ticket.passager.lastName}
+                                    ticket.passenger.lastName}
                             </p>
                             <p class="flight-course">
-                                {ticket.passager.documentType +
+                                {ticket.passenger.documentType +
                                     ": " +
-                                    ticket.passager.documentId}
+                                    ticket.passenger.documentId}
                             </p>
                             <p class="flight-course">
                                 {"Row: " +
@@ -140,7 +139,7 @@
         flex: 5;
         padding-left: 1vw;
     }
-    .passager {
+    .passenger {
         border-radius: 8px;
         background-color: #9cb4cc;
         margin: 8px;

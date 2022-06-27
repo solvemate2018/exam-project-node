@@ -9,8 +9,8 @@
 </script>
 
 <!-- Footer -->
-<footer>
-    <div class="d-flex justify-content-around align-items-center">
+<footer class="footer">
+    <div class="d-flex justify-content-around align-items-center footer">
         <div class="d-flex justify-content-around align-items-center">
             <p>{"Flights so far: " + numberOfPassedFlights}</p>
         </div>
@@ -21,7 +21,7 @@
 </footer>
 
 <style>
-    footer {
+    .footer {
         height: 6vh;
         background-color: #748da6;
     }

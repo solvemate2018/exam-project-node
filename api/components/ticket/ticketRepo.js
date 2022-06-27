@@ -1,5 +1,5 @@
 const { Ticket } = require("./ticket.js");
-const { Passager } = require("../passager/passager.js");
+const { Passenger } = require("../passenger/passenger.js");
 
 async function isAvailable(ticket_row, ticket_seat, flightId) {
   const ticket = await Ticket.findOne({
@@ -14,30 +14,30 @@ async function isAvailable(ticket_row, ticket_seat, flightId) {
   }
 }
 
-async function bookTicket(ticket, passager, flightId, userId) {
-  let dbpassager;
-  if (await Passager.count({
+async function bookTicket(ticket, passenger, flightId, userId) {
+  let dbpassenger;
+  if (await Passenger.count({
     where: {
-      firstName: passager.firstName,
-      lastName: passager.lastName,
-      documentType: passager.documentType,
-      documentId: passager.documentId,
+      firstName: passenger.firstName,
+      lastName: passenger.lastName,
+      documentType: passenger.documentType,
+      documentId: passenger.documentId,
     }
   }) == 0) {
-    dbpassager = await Passager.create({
-      firstName: passager.firstName,
-      lastName: passager.lastName,
-      documentType: passager.documentType,
-      documentId: passager.documentId,
+    dbpassenger = await Passenger.create({
+      firstName: passenger.firstName,
+      lastName: passenger.lastName,
+      documentType: passenger.documentType,
+      documentId: passenger.documentId,
     });
   }
   else {
-    dbpassager = await Passager.findOne({
+    dbpassenger = await Passenger.findOne({
       where: {
-        firstName: passager.firstName,
-        lastName: passager.lastName,
-        documentType: passager.documentType,
-        documentId: passager.documentId,
+        firstName: passenger.firstName,
+        lastName: passenger.lastName,
+        documentType: passenger.documentType,
+        documentId: passenger.documentId,
       }
     })
   }
@@ -47,7 +47,7 @@ async function bookTicket(ticket, passager, flightId, userId) {
     ticket_seat: ticket.ticket_seat,
     UserId: userId,
     FlightId: flightId,
-    PassagerId: dbpassager.id,
+    PassengerId: dbpassenger.id,
   });
 }
 

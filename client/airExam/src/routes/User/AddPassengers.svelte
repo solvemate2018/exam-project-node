@@ -1,14 +1,14 @@
 <script>
     import { useNavigate } from "svelte-navigator";
-    import { passagers } from "../../stores/passagers";
-    import { validateName } from "../../miscellaneous/functions";
+    import { passengers } from "../../stores/passengers";
+    import { validateName } from "../../functions/functions.js";
     import RouteInfo from "../../components/RouteInfo.svelte";
-    let numberOfPassagers = 1;
-    let numberOfPassagersValue;
-    let numberOfPassagersError = "";
-    let allPassagersValid = false;
+    let numberOfPassengers = 1;
+    let numberOfPassengersValue;
+    let numberOfPassengersError = "";
+    let allPassengersValid = false;
     const navigate = useNavigate();
-    $passagers = [];
+    $passengers = [];
 
     function checkIfFormIsReady(index) {
         let firstName = document.querySelector("#firstName" + index);
@@ -35,7 +35,7 @@
             msg.textContent += "Invalid document ID!";
             isNotValid = true;
         } else {
-            $passagers[index] = {
+            $passengers[index] = {
                 firstName: firstName.value,
                 lastName: lastName.value,
                 documentType: documentType.value,
@@ -43,45 +43,45 @@
             };
         }
         if (isNotValid) {
-            $passagers.splice(index, 1);
+            $passengers.splice(index, 1);
         }
-        allPassagersValid = $passagers.length == numberOfPassagers;
+        allPassengersValid = $passengers.length == numberOfPassengers;
     }
 
-    function checkNumberOfPassagers() {
-        if (numberOfPassagersValue > 5) {
-            numberOfPassagers = 5;
-            numberOfPassagersError =
-                "Max number of passagers at the time is 5!";
-        } else if (numberOfPassagersValue < 1) {
-            numberOfPassagers = 1;
+    function checkNumberOfPassengers() {
+        if (numberOfPassengersValue > 5) {
+            numberOfPassengers = 5;
+            numberOfPassengersError =
+                "Max number of passengers at the time is 5!";
+        } else if (numberOfPassengersValue < 1) {
+            numberOfPassengers = 1;
 
-            numberOfPassagersError =
-                "Min number of passagers at the time is 1!";
+            numberOfPassengersError =
+                "Min number of passengers at the time is 1!";
         } else {
-            numberOfPassagers = numberOfPassagersValue;
-            numberOfPassagersError = "";
+            numberOfPassengers = numberOfPassengersValue;
+            numberOfPassengersError = "";
         }
-        checkIfFormIsReady(numberOfPassagers - 1);
+        checkIfFormIsReady(numberOfPassengers - 1);
     }
 </script>
 
 <div class="container">
     <RouteInfo />
-    <h5>Please select a number of passagers</h5>
+    <h5>Please select a number of passengers</h5>
     <input
-        bind:value={numberOfPassagersValue}
+        bind:value={numberOfPassengersValue}
         type="number"
         placeholder="1"
         max="5"
         min="1"
-        on:change={checkNumberOfPassagers}
-        on:click={checkNumberOfPassagers}
+        on:change={checkNumberOfPassengers}
+        on:click={checkNumberOfPassengers}
     />
-    <p>{numberOfPassagersError}</p>
-    {#each Array(numberOfPassagers) as _, index (index)}
+    <p>{numberOfPassengersError}</p>
+    {#each Array(numberOfPassengers) as _, index (index)}
         <form id={"form" + index}>
-            <h6>Passager {index + 1}</h6>
+            <h6>Passenger {index + 1}</h6>
             <input
                 id={"firstName" + index}
                 on:change={() => checkIfFormIsReady(index)}
@@ -111,7 +111,7 @@
     <datalist id="documentTypes">
         <option value="Passport" /><option value="ID card" /></datalist
     >
-    {#if allPassagersValid}
+    {#if allPassengersValid}
         <button
             on:click={() => navigate("/bookTickets")}
             type="button button-link"
@@ -126,7 +126,7 @@
     }
     .button {
         width: 6vw;
-        height: 4vh;
+        height: 5vh;
         background-color: #748da6;
         border-radius: 6px;
         border: 0px;

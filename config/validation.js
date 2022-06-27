@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 async function validateString(stringToCheck) {
-  Joi.assert(stringToCheck, Joi.string().min(3).max(30));
+  Joi.assert(stringToCheck, Joi.string().min(3).max(50));
 }
 async function validateDate(dateToCheck) {
   Joi.assert(

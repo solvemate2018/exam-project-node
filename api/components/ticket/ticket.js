@@ -20,16 +20,16 @@ const Ticket = sequelize.define(
 );
 
 async function setAssociations() {
-  const { Passager } = require("../passager/passager.js");
+  const { Passenger } = require("../passenger/passenger.js");
   const { User } = require("../user/user.js");
   const { Flight } = require("../flight/flight.js");
   Flight.hasMany(Ticket);
   Ticket.belongsTo(Flight);
 
-  Ticket.hasOne(Passager);
-  Ticket.belongsTo(Passager);
-  Passager.hasOne(Ticket);
-  Passager.belongsTo(Ticket);
+  Ticket.hasOne(Passenger);
+  Ticket.belongsTo(Passenger);
+  Passenger.hasOne(Ticket);
+  Passenger.belongsTo(Ticket);
 
   User.hasMany(Ticket);
   Ticket.belongsTo(User);

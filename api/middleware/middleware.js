@@ -29,7 +29,7 @@ async function setMiddleware(app) {
   });
 
   app.use(baseLimiter);
-  app.use("/users/auth", authLimiter);
+  app.use("/users", authLimiter);
 
   app.use(cors());
   app.use(routes.router);

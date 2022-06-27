@@ -1,6 +1,6 @@
 <script>
     import { inboundFlight, outboundFlight } from "../stores/flight";
-    import { getDayOfTheWeek, getMonth } from "../miscellaneous/functions";
+    import { getDayOfTheWeek, getMonth } from "../functions/functions";
     let inboundTakeOff = new Date($inboundFlight.takeOff);
     let outboundTakeOff = new Date($outboundFlight.takeOff);
 </script>

@@ -2,7 +2,8 @@
     import { onDestroy } from "svelte";
 
     import { Link, useNavigate } from "svelte-navigator";
-    import { logout, getCookie, setCookie } from "../miscellaneous/functions";
+    import { getCookie, setCookie } from "../functions/functions";
+    import { logout } from "../functions/apiCalls";
     const navigate = useNavigate();
     let loggedIn = getCookie("loggedIn") == "true";
     let userRole = getCookie("userRole");
@@ -64,14 +65,10 @@
                     <li class="nav-item">
                         <Link class="nav-link" to="/register">Register</Link>
                     </li>
-                {:else if userRole != "ADMIN"}
+                {:else}
                     <li class="nav-item">
                         <Link class="nav-link" to="/myflights">MyFlights</Link>
                     </li>
-                    <li class="nav-item">
-                        <p class="nav-link" on:click={logOut}>Logout</p>
-                    </li>
-                {:else if userRole == "ADMIN"}
                     <li class="nav-item">
                         <p class="nav-link" on:click={logOut}>Logout</p>
                     </li>

@@ -1,5 +1,5 @@
 const ticketRepo = require("./ticketRepo.js");
-const passagerRepo = require("../passager/passagerRepo.js");
+const passengerRepo = require("../passenger/passengerRepo.js");
 const flightRepo = require("../flight/flightRepo.js");
 const userRepo = require("../user/userRepo.js");
 const { validateString } = require("../../../config/validation.js");
@@ -8,10 +8,10 @@ async function createTicket(req, res, next) {
   try {
     let session = req.session;
     const ticket = req.body.ticket;
-    const passager = req.body.passager;
+    const passenger = req.body.passenger;
     const flightId = req.params.flightId;
     const userId = session.user.id;
-    await validateTicketData(ticket, passager, flightId, userId);
+    await validateTicketData(ticket, passenger, flightId, userId);
 
     await ticketRepo.isAvailable(
       ticket.ticket_row,
@@ -19,7 +19,7 @@ async function createTicket(req, res, next) {
       flightId
     );
 
-    await ticketRepo.bookTicket(ticket, passager, flightId, userId);
+    await ticketRepo.bookTicket(ticket, passenger, flightId, userId);
     res.send({ msg: "Succesfully created" });
   } catch (error) {
     next(error);
@@ -34,10 +34,10 @@ async function getByUser(req, res, next) {
   }
 }
 
-async function validateTicketData(ticket, passager, flightId, userId) {
-  await validateString(passager.firstName);
-  await validateString(passager.lastName);
-  if (passager.documentType != "Passport" && passager.documentType != "ID card")
+async function validateTicketData(ticket, passenger, flightId, userId) {
+  await validateString(passenger.firstName);
+  await validateString(passenger.lastName);
+  if (passenger.documentType != "Passport" && passenger.documentType != "ID card")
     throw new Error("The document type is not valid");
   if (!(await userRepo.userExists(userId)))
     throw new Error("There is no such user");

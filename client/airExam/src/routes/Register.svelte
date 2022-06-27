@@ -1,12 +1,8 @@
 <script>
-    import {
-        verifyEmail,
-        verifyPassword,
-        register,
-    } from "../miscellaneous/functions";
-    import { user } from "../stores/user";
+    import { verifyEmail, verifyPassword } from "../functions/functions";
+    import { register } from "../functions/apiCalls";
     import { inboundFlight, outboundFlight } from "../stores/flight";
-    import { passagers } from "../stores/passagers";
+    import { passengers } from "../stores/passengers";
     import { Link } from "svelte-navigator";
     let email;
     let password;
@@ -25,16 +21,16 @@
             password == repeatPassword
         ) {
             let registerMsg = await register(email, password, repeatPassword);
-            alert(registerMsg + " " + $user.email);
+            alert(registerMsg);
             if (
                 registerMsg == "Successfully registered!" &&
                 $inboundFlight != {} &&
                 $outboundFlight != {} &&
-                $passagers[0].outboundSeat != undefined
+                $passengers[0].outboundSeat != undefined
             ) {
                 navigate("/confirmReservation");
             } else if (registerMsg == "Successfully registered!") {
-                navigate("../");
+                navigate("/");
             }
         }
         if (!verifyEmail(email)) {
@@ -115,7 +111,13 @@
                                         on:click={tryRegister}>Register</button
                                     >
                                 </div>
-
+                                <p class="text-center text-muted mt-5 mb-0">
+                                    By registering, you are agreeing to out
+                                    <a
+                                        href="https://www.termsfeed.com/live/1fa2f851-d7a8-4aa7-a15c-22b49376df31"
+                                        >terms and conditions</a
+                                    >!
+                                </p>
                                 <p class="text-center text-muted mt-5 mb-0">
                                     Have already an account? <Link
                                         to="/login"

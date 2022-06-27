@@ -1,8 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { useNavigate } from "svelte-navigator";
-    import { scheduleFlights } from "../../miscellaneous/functions";
-
+    import { scheduleFlights } from "../../functions/apiCalls.js";
     let flight = { origin: "", destination: "", duration: 15 };
     let frequency = "Ones";
     let frequencies = ["Ones", "Ones per week", "Ones per day"];
@@ -98,7 +97,7 @@
             alert(result.msg);
             navigate("/");
         } else {
-            alert(result.err);
+            alert(result.error);
         }
     }
 </script>

@@ -1,14 +1,14 @@
 <script>
     import { inboundFlight, outboundFlight } from "../../stores/flight";
-    import { passagers } from "../../stores/passagers";
+    import { passengers } from "../../stores/passengers";
     import { useNavigate } from "svelte-navigator";
     import RouteInfo from "../../components/RouteInfo.svelte";
 
     import {
-        getSeatAvailabilities,
         getNumberOfUniqueValues,
         getCookie,
-    } from "../../miscellaneous/functions";
+    } from "../../functions/functions";
+    import { getSeatAvailabilities } from "../../functions/apiCalls";
     import { onMount } from "svelte";
 
     let inboundTickets = [];
@@ -37,50 +37,51 @@
             outboundTickets.map((ticket) => ticket.seat)
         );
 
-        let restoredPassagers = $passagers;
-        restoredPassagers.map((pass) => {
+        let restoredPassengers = $passengers;
+        restoredPassengers.map((pass) => {
             pass.inboundSeat = undefined;
             pass.outboundSeat = undefined;
         });
     });
 
     function selectSeat(index) {
-        let edittedPassagers = $passagers;
-        if (selectedTickets < $passagers.length) {
-            edittedPassagers[selectedTickets].inboundSeat =
+        let edittedPassengers = $passengers;
+        if (selectedTickets < $passengers.length) {
+            edittedPassengers[selectedTickets].inboundSeat =
                 inboundTickets[index];
             inboundTickets[index].selected = true;
         } else {
-            edittedPassagers[selectedTickets - $passagers.length].outboundSeat =
-                outboundTickets[index];
+            edittedPassengers[
+                selectedTickets - $passengers.length
+            ].outboundSeat = outboundTickets[index];
             outboundTickets[index].selected = true;
         }
 
-        passagers.set(edittedPassagers);
+        passengers.set(edittedPassengers);
 
         selectedTickets++;
     }
 
     function removeOutboundSeats() {
-        selectedTickets = $passagers.length;
-        let edittedPassagers = $passagers;
+        selectedTickets = $passengers.length;
+        let edittedPassengers = $passengers;
 
-        edittedPassagers.forEach((passager) => {
-            passager.outboundSeat = undefined;
+        edittedPassengers.forEach((passenger) => {
+            passenger.outboundSeat = undefined;
         });
         outboundTickets.forEach((seat) => {
             seat.selected = false;
         });
-        passagers.set(edittedPassagers);
+        passengers.set(edittedPassengers);
     }
 
     function removeInboundSeats() {
         selectedTickets = 0;
-        let edittedPassagers = $passagers;
+        let edittedPassengers = $passengers;
 
-        edittedPassagers.forEach((passager) => {
-            passager.inboundSeat = undefined;
-            passager.outboundSeat = undefined;
+        edittedPassengers.forEach((passenger) => {
+            passenger.inboundSeat = undefined;
+            passenger.outboundSeat = undefined;
         });
         inboundTickets.forEach((seat) => {
             seat.selected = false;
@@ -88,64 +89,64 @@
         outboundTickets.forEach((seat) => {
             seat.selected = false;
         });
-        passagers.set(edittedPassagers);
+        passengers.set(edittedPassengers);
     }
 </script>
 
 <div class="container">
     <RouteInfo />
-    {#each $passagers as passager}
-        {#if selectedTickets - $passagers.length > $passagers.indexOf(passager)}
+    {#each $passengers as passenger}
+        {#if selectedTickets - $passengers.length > $passengers.indexOf(passenger)}
             <h4>
-                {"Passager " +
-                    ($passagers.indexOf(passager) + 1) +
+                {"Passenger " +
+                    ($passengers.indexOf(passenger) + 1) +
                     " - " +
-                    passager.firstName +
+                    passenger.firstName +
                     " " +
-                    passager.lastName +
+                    passenger.lastName +
                     ", Inbound Seat: Row:" +
-                    passager.inboundSeat.row +
+                    passenger.inboundSeat.row +
                     " Seat:" +
-                    passager.inboundSeat.seat +
+                    passenger.inboundSeat.seat +
                     ", Outbound Seat: Row:" +
-                    passager.outboundSeat.row +
+                    passenger.outboundSeat.row +
                     " Seat:" +
-                    passager.outboundSeat.seat}
+                    passenger.outboundSeat.seat}
             </h4>
-        {:else if selectedTickets > $passagers.indexOf(passager)}
+        {:else if selectedTickets > $passengers.indexOf(passenger)}
             <h4>
-                {"Passager " +
-                    ($passagers.indexOf(passager) + 1) +
+                {"Passenger " +
+                    ($passengers.indexOf(passenger) + 1) +
                     " - " +
-                    passager.firstName +
+                    passenger.firstName +
                     " " +
-                    passager.lastName +
+                    passenger.lastName +
                     ", Inbound Seat: Row:" +
-                    passager.inboundSeat.row +
+                    passenger.inboundSeat.row +
                     " Seat:" +
-                    passager.inboundSeat.seat}
+                    passenger.inboundSeat.seat}
             </h4>
         {:else}
             <h4>
-                {"Passager " +
-                    ($passagers.indexOf(passager) + 1) +
+                {"Passenger " +
+                    ($passengers.indexOf(passenger) + 1) +
                     " - " +
-                    passager.firstName +
+                    passenger.firstName +
                     " " +
-                    passager.lastName}
+                    passenger.lastName}
             </h4>
         {/if}
     {/each}
-    {#if selectedTickets > $passagers.length}
+    {#if selectedTickets > $passengers.length}
         <button on:click={removeOutboundSeats} type="button" class="button"
             ><p class="button-text">Change Outbound seats</p></button
         >
-    {:else if selectedTickets > 0 && selectedTickets <= $passagers.length}
+    {:else if selectedTickets > 0 && selectedTickets <= $passengers.length}
         <button on:click={removeInboundSeats} type="button" class="button"
             ><p class="button-text">Change Inbound seats</p></button
         >
     {/if}
-    {#if selectedTickets < $passagers.length}
+    {#if selectedTickets < $passengers.length}
         <h4>Inbound Flight Seats:</h4>
         <div class="seat-selector">
             {#each Array(inboundRows) as _, row (row)}
@@ -173,7 +174,7 @@
                 </ul>
             {/each}
         </div>
-    {:else if selectedTickets < $passagers.length * 2}
+    {:else if selectedTickets < $passengers.length * 2}
         <h4>Outbound Flight Seats:</h4>
         <div class="seat-selector">
             {#each Array(outboundRows) as _, row (row)}
@@ -202,14 +203,14 @@
             {/each}
         </div>
     {/if}
-    {#if selectedTickets == $passagers.length * 2 && getCookie("loggedIn") == "true"}
+    {#if selectedTickets == $passengers.length * 2 && getCookie("loggedIn") == "true"}
         <button
             on:click={() => navigate("/confirmReservation")}
             type="button"
             class="button"
             ><p class="button-text">Confirm reservation</p></button
         >
-    {:else if selectedTickets == $passagers.length * 2 && getCookie("loggedIn") != "true"}
+    {:else if selectedTickets == $passengers.length * 2 && getCookie("loggedIn") != "true"}
         <button on:click={() => navigate("/login")} type="button" class="button"
             ><p class="button-text">Confirm reservation</p></button
         >
@@ -225,7 +226,7 @@
     }
     .button {
         width: 10vw;
-        height: 4vh;
+        height: 5vh;
         background-color: #748da6;
         border-radius: 6px;
         border: 0px;
