@@ -41,6 +41,44 @@ async function flightHasSeat(ticket_row, ticket_seat, flightId) {
   return true;
 }
 
+async function fetchRoutes() {
+  const routes = await Flight.findAll({ attributes: ['origin', 'destination'] });
+  return routes;
+}
+
+async function getByFlightId(flightId) {
+  const flight = await Flight.findByPk(flightId);
+  if (flight == null) throw new Error("There is no flight with that ID")
+  return flight;
+}
+
+async function countPassedFlights() {
+  let count = await Flight.count({ where: { landing: { [Op.lte]: new Date() } } });
+  return count;
+}
+
+async function countFuture() {
+  let count = await Flight.count({ where: { landing: { [Op.gte]: new Date() } } });
+  return count;
+}
+
+async function getLastTen() {
+  let flights = await Flight.findAll({ where: { landing: { [Op.lte]: new Date() } }, limit: 10, order: [['landing', 'DESC']] });
+  return flights;
+}
+
+async function getNextTen() {
+  let flights = await Flight.findAll({ where: { takeOff: { [Op.gte]: new Date() } }, limit: 10, order: [['takeOff', 'ASC']] });
+  return flights;
+}
+
+exports.fetchRoutes = fetchRoutes;
 exports.createFlight = createFlight;
 exports.fetchBy = fetchBy;
 exports.flightHasSeat = flightHasSeat;
+exports.getByFlightId = getByFlightId;
+exports.countPassedFlights = countPassedFlights;
+exports.countFuture = countFuture
+exports.getNextTen = getNextTen;
+exports.getLastTen = getLastTen;
+

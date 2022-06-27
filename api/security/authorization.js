@@ -9,19 +9,8 @@ function authorize(accessRoles, onlyByCurrentUser) {
     } else if (req.session.user == undefined) {
       res.send({ error: "Please login before going to this page!" });
     } else if (
-      accessRoles.includes(req.session.user.role) &&
-      onlyByCurrentUser == undefined
+      accessRoles.includes(req.session.user.role)
     ) {
-      next();
-    } else if (
-      accessRoles.includes(req.session.user.role) &&
-      onlyByCurrentUser == true
-    ) {
-      if (req.session.user.id != req.params.userId) {
-        res.send({
-          error: "You don't have permission to visit this page",
-        });
-      }
       next();
     } else {
       res.status(403);
@@ -31,11 +20,5 @@ function authorize(accessRoles, onlyByCurrentUser) {
     }
   };
 }
-
-// function authorize(accessRoles, onlyByCurrentUser) {
-//   return (req, res, next) => {
-//     next();
-//   };
-// }
 
 exports.authorize = authorize;

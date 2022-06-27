@@ -31,18 +31,18 @@ async function scheduleFlight(req, res, next) {
         break;
       case "Ones per week":
         newFlight.landing = landingTime;
-        while (req.body.finishingOn > newFlight.takeOff) {
-          flightRepo.createFlight(newFlight);
-          newFlight.takeOff.setDate(newFlight.takeOff.getDate + 7);
-          newFlight.landing.setDate(newFlight.landing.getDate + 7);
+        while (new Date(req.body.finishingOn) > newFlight.takeOff) {
+          await flightRepo.createFlight(newFlight);
+          newFlight.takeOff.setDate(newFlight.takeOff.getDate() + 7);
+          newFlight.landing.setDate(newFlight.landing.getDate() + 7);
         }
         break;
       case "Ones per day":
         newFlight.landing = landingTime;
-        while (req.body.finishingOn > newFlight.takeOff) {
-          flightRepo.createFlight(newFlight);
-          newFlight.takeOff.setDate(newFlight.takeOff.getDate + 1);
-          newFlight.landing.setDate(newFlight.landing.getDate + 1);
+        while (new Date(req.body.finishingOn) > newFlight.takeOff) {
+          await flightRepo.createFlight(newFlight);
+          newFlight.takeOff.setDate(newFlight.takeOff.getDate() + 1);
+          newFlight.landing.setDate(newFlight.landing.getDate() + 1);
         }
         break;
     }
@@ -77,5 +77,88 @@ async function getBy(req, res, next) {
   }
 }
 
+
+async function getRoutes(req, res, next) {
+  try {
+    const routes = await flightRepo.fetchRoutes();
+    let uniqueRoutes = [];
+    routes.forEach(route => {
+      let isUnique = true;
+      uniqueRoutes.forEach(uniqueRoute => {
+        if (uniqueRoute.origin == route.origin && uniqueRoute.destination == route.destination) {
+          isUnique = false;
+        }
+      })
+      if (isUnique)
+        uniqueRoutes.push(route);
+    });
+    res.send(uniqueRoutes);
+
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getById(req, res, next) {
+  try {
+    const flight = await flightRepo.getByFlightId(req.params.id);
+
+    res.send(flight)
+  }
+  catch (error) {
+    next(error);
+  }
+}
+
+async function countFuture(req, res, next) {
+  try {
+    const count = await flightRepo.countFuture();
+
+    res.send({ count: count })
+  }
+  catch (error) {
+    next(error);
+  }
+}
+
+async function countPast(req, res, next) {
+  try {
+    const count = await flightRepo.countPassedFlights();
+
+    res.send({ count: count })
+  }
+  catch (error) {
+    next(error);
+  }
+}
+
+async function getLastTen(req, res, next) {
+  try {
+    const flights = await flightRepo.getLastTen();
+
+    res.send({ flights: flights })
+  }
+  catch (error) {
+    next(error);
+  }
+}
+
+async function getNextTen(req, res, next) {
+  try {
+    const flights = await flightRepo.getNextTen();
+
+    res.send({ flights: flights })
+  }
+  catch (error) {
+    next(error);
+  }
+}
+
+exports.getRoutes = getRoutes;
 exports.scheduleFlight = scheduleFlight;
 exports.getBy = getBy;
+exports.getById = getById;
+exports.countFuture = countFuture;
+exports.countPast = countPast;
+exports.getLastTen = getLastTen;
+exports.getNextTen = getNextTen;

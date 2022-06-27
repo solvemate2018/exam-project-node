@@ -3,6 +3,7 @@ const {
   validatePassword,
   validateEmail,
 } = require("../../../config/validation.js");
+const { confirmRegistration } = require("../../../services/mailer.js");
 async function login(req, res, next) {
   try {
     const email = req.body.email;
@@ -15,7 +16,7 @@ async function login(req, res, next) {
       );
     }
     session.user = await userRepo.login(email, password);
-    res.send({ msg: "Successfully logged!" });
+    res.send({ userRole: session.user.role });
   } catch (error) {
     next(error);
   }
@@ -37,6 +38,7 @@ async function register(req, res, next) {
       );
     }
     session.user = await userRepo.register(email, password);
+    await confirmRegistration(email);
     res.send({ msg: "Successfully registered!" });
   } catch (error) {
     next(error);
@@ -49,7 +51,7 @@ async function logout(req, res, next) {
     if (session.user == undefined) {
       throw new Error("You cannot log out without log in first!");
     }
-    session.user = undefined;
+    session.destroy();
     res.send({ msg: "Successfully logged out!" });
   } catch (error) {
     next(error);

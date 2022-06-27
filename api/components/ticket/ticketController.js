@@ -6,10 +6,11 @@ const { validateString } = require("../../../config/validation.js");
 
 async function createTicket(req, res, next) {
   try {
+    let session = req.session;
     const ticket = req.body.ticket;
     const passager = req.body.passager;
     const flightId = req.params.flightId;
-    const userId = req.params.userId;
+    const userId = session.user.id;
     await validateTicketData(ticket, passager, flightId, userId);
 
     await ticketRepo.isAvailable(
@@ -27,9 +28,7 @@ async function createTicket(req, res, next) {
 
 async function getByUser(req, res, next) {
   try {
-    if (!userRepo.userExists(req.params.userId))
-      throw new Error("Invalid user ID");
-    res.send(await ticketRepo.getByUser(req.params.userId));
+    res.send(await ticketRepo.getByUser(req.session.user.id));
   } catch (error) {
     next(error);
   }
@@ -40,8 +39,6 @@ async function validateTicketData(ticket, passager, flightId, userId) {
   await validateString(passager.lastName);
   if (passager.documentType != "Passport" && passager.documentType != "ID card")
     throw new Error("The document type is not valid");
-  if (await passagerRepo.documentExist(passager.documentId))
-    throw new Error("This document is already in use by another passager");
   if (!(await userRepo.userExists(userId)))
     throw new Error("There is no such user");
   if (
@@ -54,5 +51,49 @@ async function validateTicketData(ticket, passager, flightId, userId) {
     throw new Error("This flight does not have such seat");
 }
 
+async function getByFlight(req, res, next) {
+  try {
+    const flight = await flightRepo.getByFlightId(req.params.flightId);
+    const rows = flight.rows;
+    const seats = flight.seats;
+
+    const takenSeats = await ticketRepo.getByFlightId(flight.id);
+
+    let tickets = [];
+
+    let counter = 0;
+    for (let row = 1; row <= rows; row++) {
+      for (let seat = 1; seat <= seats; seat++) {
+        let isTaken = false;
+        takenSeats.forEach(takenSeat => {
+          if (takenSeat.ticket_row == row && takenSeat.ticket_seat == seat) {
+            isTaken = true;
+          }
+        });
+        tickets[counter] = { row: row, seat: seat, available: !isTaken }
+        counter++;
+      }
+    }
+
+    res.send(tickets);
+  }
+  catch (err) {
+    next(err)
+  }
+}
+
+async function countAll(req, res, next) {
+  try {
+    const count = await ticketRepo.countAll();
+
+    res.send({ count: count })
+  }
+  catch (err) {
+    next(err)
+  }
+}
+
+exports.getByFlight = getByFlight;
 exports.createTicket = createTicket;
 exports.getByUser = getByUser;
+exports.countAll = countAll;

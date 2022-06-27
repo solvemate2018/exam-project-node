@@ -26,7 +26,7 @@ async function login(email, password) {
   if (!dbUser) {
     throw new Error("There is no user with such Email");
   }
-  if (comparePasswords(password, dbUser.password)) {
+  if (await comparePasswords(password, dbUser.password)) {
     return dbUser;
   } else throw new Error("Incorrect password");
 }

@@ -24,8 +24,10 @@
     "helmet": "^5.0.2",
     "joi": "^17.6.0",
     "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.5",
     "sequelize": "^6.19.0",
     "session": "^0.1.0",
+    "socket.io": "^4.5.1",
     "sqlite3": "^5.0.8"
   }
 }

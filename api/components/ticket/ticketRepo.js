@@ -15,12 +15,32 @@ async function isAvailable(ticket_row, ticket_seat, flightId) {
 }
 
 async function bookTicket(ticket, passager, flightId, userId) {
-  const dbpassager = await Passager.create({
-    firstName: passager.firstName,
-    lastName: passager.lastName,
-    documentType: passager.documentType,
-    documentId: passager.documentId,
-  });
+  let dbpassager;
+  if (await Passager.count({
+    where: {
+      firstName: passager.firstName,
+      lastName: passager.lastName,
+      documentType: passager.documentType,
+      documentId: passager.documentId,
+    }
+  }) == 0) {
+    dbpassager = await Passager.create({
+      firstName: passager.firstName,
+      lastName: passager.lastName,
+      documentType: passager.documentType,
+      documentId: passager.documentId,
+    });
+  }
+  else {
+    dbpassager = await Passager.findOne({
+      where: {
+        firstName: passager.firstName,
+        lastName: passager.lastName,
+        documentType: passager.documentType,
+        documentId: passager.documentId,
+      }
+    })
+  }
 
   const dbticket = await Ticket.create({
     ticket_row: ticket.ticket_row,
@@ -40,6 +60,22 @@ async function getByUser(userId) {
   return await tickets;
 }
 
+async function getByFlightId(flightId) {
+  const tickets = await Ticket.findAll({
+    where: {
+      FlightId: flightId,
+    },
+  });
+  return await tickets;
+}
+
+async function countAll() {
+  const ticketsCount = await Ticket.count();
+  return ticketsCount;
+}
+
 exports.isAvailable = isAvailable;
 exports.bookTicket = bookTicket;
 exports.getByUser = getByUser;
+exports.getByFlightId = getByFlightId;
+exports.countAll = countAll;
